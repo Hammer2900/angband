@@ -1109,3 +1109,6 @@ else()
     add_custom_target(allunittests)
 endif()
 add_dependencies(alltests allunittests)
+    parity/tunnel.c
+    parity/native.c
+    parity/trap.c

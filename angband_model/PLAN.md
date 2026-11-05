@@ -516,6 +516,25 @@ Random-trap boundary зафиксирован как engine-owned: explicit inst
 получен, но weighted allocation/catalog parity и `classic_gen` integration pending.
 Следующая tail phase: player placement/start.
 
+## Player-start native boundary contract — 2026-10-18
+
+Добавлены `describe_player_start_native_boundary`,
+`validate_player_start_native_boundary` и `validate_player_start_native_result`.
+Контракт фиксирует engine ownership persistent stair reuse, ordered `find_start`,
+incoming stair flags, `player_place`/occupancy и failed-generation cleanup.
+Detached result проверяет status, position, stair evidence и install flag; execution
+и parity остаются pending.
+
+Player-start evidence подключён в `GenerationTailBridge.readiness()` и
+`generation_bridge_progress_report` через strict JSON detached snapshots. Valid
+structural evidence не уменьшает pending bridge counters, не включает native
+execution и не делает `generation_complete=True`.
+
+Проверка: focused player boundary/progress tests — 2 OK; `one_room` — won, 8/8
+фаз; compile и git diff --check — OK.
+Следующий батч: native player-start probe с engine-owned `new_player_spot`, либо
+фиксация prerequisites/blocker без Python-only замены.
+
 ## Random-trap detached snapshot/health — 2026-10-18
 
 Добавлены `detach_trap_native_result` и `health_trap_native_result`: strict JSON

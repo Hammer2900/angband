@@ -535,6 +535,25 @@ execution и не делает `generation_complete=True`.
 Следующий батч: native player-start probe с engine-owned `new_player_spot`, либо
 фиксация prerequisites/blocker без Python-only замены.
 
+## Native player-start probe — 2026-10-18
+
+Добавлен `parity/player.c` со штатным `set_file_paths/init_angband/
+player_make_simple` harness. Synthetic 7x9 chunk вызывает публичный
+`new_player_spot`: engine сам выполняет ordered start search, incoming stair
+creation и `player_place`. Detached JSON сообщает completed position, `FEAT_MORE`
+(6), installation и opaque RNG index; RNG/global cleanup исправлены после первого
+double-free fixture bug.
+
+Добавлен Python differential test с `GAME_ROOT` cwd: проверяет interior position,
+feature, installed flag и RNG index range без фиксации draw count. `classic_gen`
+не запускается, player adapter readiness не меняется.
+
+Проверка: `unittest-parity-player` build, `parity/player` 1/1; targeted
+ differential player test — 1 OK; one_room — won, 8/8 фаз; compile и
+git diff --check — OK.
+Следующий шаг: подключить player-start result report к readiness/progress strict
+snapshot, затем перейти к monster population boundary.
+
 ## Random-trap detached snapshot/health — 2026-10-18
 
 Добавлены `detach_trap_native_result` и `health_trap_native_result`: strict JSON

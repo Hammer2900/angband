@@ -20,12 +20,23 @@ endif()
 option(SUPPORT_SPOIL_FRONTEND "Support for spoiler front end." ${SPOIL_DEFAULT})
 option(SUPPORT_STATS_FRONTEND "Support for statistics front end; requires sqlite3 development library." OFF)
 option(SUPPORT_TEST_FRONTEND "Support for test front end." OFF)
+option(SUPPORT_HEADLESS_FRONTEND "Build without selecting a GUI frontend." OFF)
 option(SUPPORT_WINDOWS_FRONTEND "Support for windows front end." OFF)
 option(SUPPORT_BUNDLED_PNG "Use bundled Windows PNG+Zlib (32-bit x86 only)" OFF)
 option(SUPPORT_STATIC_LINKING "Enable static linking where possible" OFF)
 option(SUPPORT_STATS_BACKEND "Enable backend support for statistics and related debugging commands.  Implied by SUPPORT_STATS_FRONTEND." OFF)
 option(SUPPORT_BORG "Support for Borg." ON)
 option(SUPPORT_BORG_HIGH_SCORES "Borg characters allowed in high scores." OFF)
+option(SUPPORT_PYTHON "Embed Python 3.14 for optional scripting support." OFF)
+
+if(SUPPORT_PYTHON)
+    find_package(Python3 3.14 EXACT COMPONENTS Development QUIET)
+    if(NOT Python3_Development_FOUND)
+        message(FATAL_ERROR
+            "SUPPORT_PYTHON requires Python 3.14 development headers and libraries "
+            "(Python3 Development, Development.Module, and Development.Embed).")
+    endif()
+endif()
 
 # By default, generate a self-contained build left where the build was run.
 # If not using the Windows front end, the executable will have hardwired
@@ -71,12 +82,16 @@ if((SUPPORT_STATS_FRONTEND) AND (NOT SUPPORT_STATS_BACKEND))
 endif()
 # If none of the graphical front ends will be configured, configure the one for
 # Windows if that's the target plaform or the X11 one for anything else.
-if((NOT SUPPORT_GCU_FRONTEND) AND (NOT SUPPORT_SDL_FRONTEND) AND (NOT SUPPORT_SDL2_FRONTEND) AND (NOT SUPPORT_WINDOWS_FRONTEND) AND (NOT SUPPORT_X11_FRONTEND))
+if((NOT SUPPORT_HEADLESS_FRONTEND) AND (NOT SUPPORT_GCU_FRONTEND) AND (NOT SUPPORT_SDL_FRONTEND) AND (NOT SUPPORT_SDL2_FRONTEND) AND (NOT SUPPORT_WINDOWS_FRONTEND) AND (NOT SUPPORT_X11_FRONTEND))
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         set(SUPPORT_WINDOWS_FRONTEND ON)
     else()
         set(SUPPORT_X11_FRONTEND ON)
     endif()
+endif()
+if(SUPPORT_HEADLESS_FRONTEND AND (SUPPORT_GCU_FRONTEND OR SUPPORT_SDL_FRONTEND
+        OR SUPPORT_SDL2_FRONTEND OR SUPPORT_WINDOWS_FRONTEND OR SUPPORT_X11_FRONTEND))
+    message(FATAL_ERROR "SUPPORT_HEADLESS_FRONTEND conflicts with another frontend")
 endif()
 # Can not have support for SDL and SDL2 at the same time.
 if(SUPPORT_SDL2_FRONTEND OR SUPPORT_SDL2_SOUND)
@@ -166,6 +181,7 @@ else()
 endif()
 
 add_library(OurCoreLib OBJECT
+        $<$<BOOL:${SUPPORT_PYTHON}>:src/script-python.c>
         src/buildid.c
         src/cave-map.c
         src/cave-square.c
@@ -381,6 +397,12 @@ set_target_properties(OurCoreLib PROPERTIES C_STANDARD 99)
 set(ANGBAND_CORE_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
 set(ANGBAND_CORE_LINK_LIBRARIES "")
 
+if(SUPPORT_PYTHON)
+    target_compile_definitions(OurCoreLib PRIVATE USE_PYTHON)
+    target_include_directories(OurCoreLib PRIVATE ${Python3_INCLUDE_DIRS})
+    list(APPEND ANGBAND_CORE_LINK_LIBRARIES Python3::Python)
+endif()
+
 if(SUPPORT_BORG)
     target_include_directories(OurCoreLib PRIVATE
         ${ANGBAND_CORE_INCLUDE_DIRS}
@@ -440,6 +462,65 @@ target_include_directories(OurExecutable PRIVATE
 )
 target_link_libraries(OurExecutable PRIVATE ${ANGBAND_CORE_LINK_LIBRARIES})
 
+if(SUPPORT_PYTHON)
+    add_executable(PythonSmokeTest
+        src/python-smoke.c
+        $<TARGET_OBJECTS:OurCoreLib>
+    )
+    set_target_properties(PythonSmokeTest PROPERTIES
+        C_STANDARD 99
+        OUTPUT_NAME python-smoke
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/game")
+    target_include_directories(PythonSmokeTest PRIVATE
+        ${ANGBAND_CORE_INCLUDE_DIRS})
+    target_compile_definitions(PythonSmokeTest PRIVATE USE_PYTHON)
+    target_link_libraries(PythonSmokeTest PRIVATE
+        ${ANGBAND_CORE_LINK_LIBRARIES})
+    add_custom_target(run-python-smoke
+        COMMAND PythonSmokeTest
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/game")
+    add_dependencies(run-python-smoke PythonSmokeTest TransferLib)
+
+    add_custom_target(run-python-tests
+        COMMAND ${CMAKE_COMMAND} -E env
+            PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/examples/python
+            python3 -m unittest discover
+            -s ${CMAKE_CURRENT_SOURCE_DIR}/examples/python -p test_*.py
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
+    add_executable(PythonPlayground
+        src/python-playground.c
+        $<TARGET_OBJECTS:OurCoreLib>
+    )
+    set_target_properties(PythonPlayground PROPERTIES
+        C_STANDARD 99
+        OUTPUT_NAME python-playground
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/game")
+    target_include_directories(PythonPlayground PRIVATE
+        ${ANGBAND_CORE_INCLUDE_DIRS})
+    target_compile_definitions(PythonPlayground PRIVATE USE_PYTHON)
+    target_link_libraries(PythonPlayground PRIVATE
+        ${ANGBAND_CORE_LINK_LIBRARIES})
+    add_custom_target(run-python-playground
+        COMMAND PythonPlayground
+        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/game")
+    add_dependencies(run-python-playground PythonPlayground TransferLib)
+
+    add_executable(PythonGame
+        src/python-game.c
+        $<TARGET_OBJECTS:OurCoreLib>
+    )
+    set_target_properties(PythonGame PROPERTIES
+        C_STANDARD 99
+        OUTPUT_NAME python-game
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/game")
+    target_include_directories(PythonGame PRIVATE
+        ${ANGBAND_CORE_INCLUDE_DIRS})
+    target_compile_definitions(PythonGame PRIVATE USE_PYTHON)
+    target_link_libraries(PythonGame PRIVATE
+        ${ANGBAND_CORE_LINK_LIBRARIES})
+endif()
+
 # Allow for some introspection:  have rules to print out names that something
 # downstream could use.  Have the output start with "our-<something>=" so it
 # can very likely be separated from whatever other junk the build system prints
@@ -448,6 +529,33 @@ add_custom_target(print-project-name
     COMMAND "${CMAKE_COMMAND}" -E echo "our-project-name=${PROJECT_NAME}")
 add_custom_target(print-executable-name
     COMMAND "${CMAKE_COMMAND}" -E echo "our-executable-name=$<TARGET_FILE_NAME:OurExecutable>")
+
+if(SUPPORT_HEADLESS_FRONTEND)
+    add_custom_target(headless-smoke
+        COMMAND "$<TARGET_FILE:OurExecutable>" --help
+        DEPENDS OurExecutable
+        USES_TERMINAL)
+    add_custom_target(headless-unit-smoke
+        COMMAND "$<TARGET_FILE:unittest-trivial-trivial>"
+        DEPENDS unittest-trivial-trivial
+        USES_TERMINAL)
+    add_custom_target(headless-parity-smoke
+        COMMAND "$<TARGET_FILE:unittest-parity-native>"
+        DEPENDS unittest-parity-native
+        USES_TERMINAL)
+    add_custom_target(headless-game-smoke
+        DEPENDS run-unittest-game-basic)
+    add_custom_target(headless-native-smoke
+        DEPENDS headless-smoke headless-unit-smoke
+                headless-parity-smoke headless-game-smoke)
+    if(SUPPORT_PYTHON)
+        add_custom_target(headless-python-smoke
+            COMMAND "$<TARGET_FILE:PythonSmokeTest>"
+            DEPENDS PythonSmokeTest
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            USES_TERMINAL)
+    endif()
+endif()
 
 if(SUPPORT_X11_FRONTEND)
     include(src/cmake/macros/X11_Frontend.cmake)
@@ -865,6 +973,10 @@ set(ANGBAND_TEST_CASE_SOURCES
     object/pile.c
     object/slays.c
     object/util.c
+    parity/tunnel.c
+    parity/native.c
+    parity/player.c
+    parity/trap.c
     parse/a-info.c
     parse/blowe.c
     parse/blowm.c
@@ -1109,6 +1221,3 @@ else()
     add_custom_target(allunittests)
 endif()
 add_dependencies(alltests allunittests)
-    parity/tunnel.c
-    parity/native.c
-    parity/trap.c

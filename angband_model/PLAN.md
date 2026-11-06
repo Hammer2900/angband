@@ -819,6 +819,34 @@ records имеют разные ownership boundaries и не объединяю�
 Следующий batch: native phase-level changed-cell/RNG comparison или remaining
 cleanup failure-path evidence.
 
+## Phase evidence normalization and RNG/cleanup audit — 2026-10-18
+
+Добавлен `normalize_generation_phase_evidence`: каждая phase record проходит
+strict JSON detachment, получает explicit `evidence_status` и default
+`cleanup_status=not_observed`, а RNG index проверяется только как opaque range
+`0..31`. Draw count, cross-phase RNG order и parity не выводятся.
+
+`build_generation_tail_manifest` использует normalizer для всех шести phases;
+invalid/non-JSON evidence не маскируется outer result. Cleanup remains unverified.
+
+Проверка: manifest/prerequisite/normalizer tests — 3 OK; one_room — won, 8/8
+фаз; compile и git diff --check — OK.
+Следующий batch: native phase-level changed-cell/RNG comparison или remaining
+cleanup failure-path evidence.
+
+## Native phase stable-fact comparator — 2026-10-18
+
+Добавлен `compare_generation_phase_observation`: сравнивает phase-specific stable
+facts без вывода полного native parity. RNG `state_i` проверяется только как
+opaque range `0..31`; draw count, cross-phase stream order и cleanup не выводятся.
+Comparator покрывает rubble/trap/player/monster/object stable shapes и mismatch
+status, всегда оставляя parity pending и execution disabled.
+
+Проверка: comparator test — 1 OK; all native probe targets built; one_room — won,
+8/8 фаз; compile и git diff --check — OK.
+Следующий batch: remaining cleanup failure-path evidence или полный native phase
+stream capture, если можно изолировать его без gameplay mutation.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

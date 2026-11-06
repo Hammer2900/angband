@@ -554,6 +554,58 @@ git diff --check — OK.
 Следующий шаг: подключить player-start result report к readiness/progress strict
 snapshot, затем перейти к monster population boundary.
 
+## Monster population native boundary contract — 2026-10-18
+
+Добавлены `describe_monster_native_boundary`,
+`validate_monster_native_boundary` и `validate_monster_native_result`. Контракт
+фиксирует engine ownership attempt budget, 10000-attempt distant search,
+empty/restriction/distance predicates, depth-weighted `get_mon_num`, placement и
+friends/escort group expansion. Detached result проверяет attempts/placed/failed,
+created IDs и opaque RNG index; spawning/race selection/group RNG не выполняются.
+
+Monster evidence подключён к tail readiness и generation progress через strict JSON
+detached snapshots. Valid evidence не уменьшает bridge counters, не включает native
+execution и оставляет parity pending.
+
+Проверка: focused monster boundary/progress tests — 2 OK; one_room — won, 8/8
+фаз; compile и git diff --check — OK.
+Следующий батч: native monster probe prerequisites или следующий objects/gold
+boundary, не создавая Python-only monster semantics.
+
+## Objects/gold native boundary contract — 2026-10-18
+
+Добавлены `describe_object_gold_native_boundary`,
+`validate_object_gold_native_boundary` и `validate_object_gold_native_result`.
+Контракт фиксирует source order room objects → both objects → both gold, engine-owned
+`Rand_normal` counts, interior allocation scan, object/ego/artifact construction,
+gold type/value/no-selling context и floor carry. Detached result проверяет counts,
+created IDs, floor positions и opaque RNG index; content creation не выполняется.
+
+Objects/gold evidence подключён в tail readiness и generation progress через strict
+JSON detached snapshots. Valid evidence не уменьшает bridge counters, не включает
+native execution и оставляет parity pending.
+
+Проверка: focused object/monster/player boundary/progress tests — 4 OK;
+one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: native monster probe prerequisites или C object/gold probe audit.
+
+## Objects/gold and monster boundary completion — 2026-10-18
+
+Objects/gold boundary/result contracts добавлены и подключены к readiness/progress;
+source order и engine ownership сохранены, content creation не выполняется.
+Monster boundary/result contracts также добавлены: engine owns attempt budget,
+distant search, restrictions/distance, depth-weighted race selection, placement и
+friends/escort expansion. Evidence публикуется detached и остаётся parity pending.
+
+Native monster probe пока отложен: корректный C fixture требует штатного `r_info`
+allocation table, monster race data, unique/group/friends state, player/chunk
+context и cleanup. Python-only race/group semantics запрещены.
+
+Проверка: focused object/monster/player boundary/progress tests — 4 OK;
+one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: native monster init/probe prerequisites или C object/gold probe
+audit с полным штатным data initialization.
+
 ## Random-trap detached snapshot/health — 2026-10-18
 
 Добавлены `detach_trap_native_result` и `health_trap_native_result`: strict JSON

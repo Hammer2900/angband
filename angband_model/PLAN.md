@@ -966,6 +966,21 @@ phase order/parity.
 Следующий batch: remaining cleanup/error-path fixtures или отдельные native
 phase hooks только при source-backed безопасной границе.
 
+## Native generation cleanup boundary audit — 2026-10-18
+
+Добавлены `describe_generation_cleanup_boundary` и validator по native
+`classic_gen` failure branches. Source-backed actions: `uncreate_artifacts`,
+`wipe_mon_list`, `cave_free`; result: null chunk + error text (`less than two
+rooms created` или `could not place player`). `rollback_verified=False` сохраняется:
+структурный cleanup call sequence не доказывает фактический rollback state.
+
+Cleanup boundary опубликован в progress summary как diagnostic-only metadata.
+
+Проверка: cleanup/telemetry/progress tests — 3 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK.
+Следующий batch: remaining native failure injection only if isolated, иначе
+finalize native parity pending ledger.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

@@ -664,8 +664,9 @@ monster probe — 1/1; one_room — won, 8/8 фаз; compile и git diff --check
 фиксируется только как положительный observed result.
 
 Python differential test проверяет seed/depth/placed/count>0/RNG range, без вывода
-race-selection или group draw semantics. Search/group contracts отделены и остаются
-parity pending; `classic_gen` не запускается.
+race-selection или group draw semantics. `validate_monster_search_result` проверяет
+boolean placement, positive count и opaque RNG range без выбора race/spawn.
+Search/group contracts отделены и остаются parity pending; `classic_gen` не запускается.
 
 Проверка: `parity/monster` 2/2; random+explicit differential tests — 2 OK;
 boundary/search/group tests — 3 OK; one_room — won, 8/8 фаз; compile и

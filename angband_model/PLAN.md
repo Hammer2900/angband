@@ -834,6 +834,21 @@ invalid/non-JSON evidence не маскируется outer result. Cleanup rema
 Следующий batch: native phase-level changed-cell/RNG comparison или remaining
 cleanup failure-path evidence.
 
+## Phase failure/cleanup evidence contract — 2026-10-18
+
+Добавлен `validate_generation_phase_failure_evidence`: failed phase обязан иметь
+explicit `cleanup_status` (`completed/pending/not_observed`), не может объявлять
+generation complete и не может заявлять retry/rollback support. Strict JSON и
+side-effect-free semantics проверяются отдельно; cleanup execution не вызывается.
+
+Phase stable-fact comparator и manifest сохраняют parity pending, поэтому outer
+failure/cleanup evidence не маскирует отсутствующие phase records.
+
+Проверка: failure/comparator/manifest tests — 3 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK.
+Следующий batch: aggregate native probe report with per-phase status или
+remaining cleanup/error-path fixtures.
+
 ## Native phase stable-fact comparator — 2026-10-18
 
 Добавлен `compare_generation_phase_observation`: сравнивает phase-specific stable

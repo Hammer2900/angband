@@ -949,6 +949,23 @@ semantic room/tunnel result.
 Следующий batch: remaining cleanup/error-path fixtures или native source-backed
 phase instrumentation boundary.
 
+## Native source-backed phase instrumentation boundary — 2026-10-18
+
+Source audit подтверждает: existing engine events покрывают lifecycle и room
+size/subtype/tunnel internals, но не emit отдельные six-tail calls
+(rubble/trap/player/monster/object/gold). Поэтому новые gameplay hooks не
+добавлялись. `validate_generation_outer_telemetry` публикует explicit
+`telemetry_coverage`: lifecycle observed, room/tunnel observed-or-absent,
+tail_phase_calls unavailable.
+
+Это фиксирует instrumentation gap как evidence, а не маскирует его inferred
+phase order/parity.
+
+Проверка: full-tail telemetry differential — 1 OK; telemetry/status/progress tests
+— 3 OK; one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: remaining cleanup/error-path fixtures или отдельные native
+phase hooks только при source-backed безопасной границе.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

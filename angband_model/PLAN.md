@@ -981,6 +981,21 @@ compile и git diff --check — OK.
 Следующий batch: remaining native failure injection only if isolated, иначе
 finalize native parity pending ledger.
 
+## Native parity pending ledger — 2026-10-18
+
+Добавлены `build_generation_tail_parity_ledger` и validator. Ledger публикует по
+каждой из шести tail phases evidence/structural status, cleanup status,
+`parity_status=pending` и execution disabled. Даже при observed evidence для
+rubble/objects/gold `pending_parity_count` остаётся ровно 6; validator отвергает
+counter decrement, completion или phase parity drift.
+
+Ledger подключён к progress summary как immutable diagnostic section.
+
+Проверка: ledger/cleanup/progress tests — 3 OK; `pending_parity_count=6`;
+one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: finalize native parity pending ledger и remaining source-backed
+blocker inventory.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

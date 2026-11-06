@@ -778,6 +778,22 @@ changed-cell records и native ownership certification ещё не объявл�
 Следующий batch: добавить full-tail differential manifest linkage или зафиксировать
 remaining missing phase-level evidence.
 
+## Full-tail outer pipeline in evidence manifest — 2026-10-18
+
+`build_generation_tail_manifest` принимает optional `outer_pipeline` и публикует
+его detached как `outer_pipeline_status`. Outer result normalizes к
+`generation_complete=False`, `parity_status=pending`, `execution_supported=False`;
+он не подменяет phase-level evidence и не сертифицирует full tail.
+
+Validator проверяет outer section и completion/parity drift. Full-tail outer probe
+через штатный `prepare_next_level` остаётся combined evidence, но phase-specific
+changed cells, exact RNG order, ownership и cleanup semantics остаются pending.
+
+Проверка: manifest/prerequisite tests — 2 OK; full-tail differential — 1 OK;
+one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: connect actual full-tail probe JSON to manifest, затем audit
+missing phase-level evidence и cleanup semantics.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

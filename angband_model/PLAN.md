@@ -606,6 +606,25 @@ one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: native monster init/probe prerequisites или C object/gold probe
 audit с полным штатным data initialization.
 
+## Explicit native monster install probe — 2026-10-18
+
+Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit
+`lookup_monster("giant white mouse")` race. Probe вызывает `place_new_monster` без
+random `get_mon_num` и без group expansion; detached JSON сообщает race_id=23,
+monster_id=1, position `(8,7)`, placed=true и opaque RNG index.
+
+Python differential test проверяет explicit selection mode, race/id/position и RNG
+range. Monster boundary/result evidence уже подключены в readiness/progress и не
+уменьшают pending callbacks или native execution eligibility.
+
+Проверка: `unittest-parity-monster` 1/1; targeted differential monster test — 1
+OK; boundary/progress/object tests — 3 OK; compile и diff-check — OK.
+Random race selection, 10000-attempt search, groups/friends и `classic_gen` parity
+остаются pending.
+
+Следующий batch: native object/gold probe audit с полным штатным data initialization
+или завершение monster random-selection boundary contract.
+
 ## Random-trap detached snapshot/health — 2026-10-18
 
 Добавлены `detach_trap_native_result` и `health_trap_native_result`: strict JSON

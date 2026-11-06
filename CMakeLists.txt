@@ -975,6 +975,7 @@ set(ANGBAND_TEST_CASE_SOURCES
     object/util.c
     parity/tunnel.c
     parity/native.c
+    parity/monster.c
     parity/player.c
     parity/trap.c
     parse/a-info.c

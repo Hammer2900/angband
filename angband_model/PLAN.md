@@ -640,6 +640,21 @@ compile и git diff --check — OK.
 Следующий batch: full allocation count/candidate differential или monster random
 search/group boundary.
 
+## Monster random-search/group boundary contract — 2026-10-18
+
+Добавлены отдельные `describe_monster_search_boundary`/
+`validate_monster_search_boundary` и `describe_monster_group_boundary`/
+`validate_monster_group_boundary`. Search contract фиксирует engine-owned
+10000-attempt coordinate RNG и empty/restriction/distance predicates; group
+contract фиксирует friends/friends_base, scatter/open-cell, group limits/unique и
+RNG ownership. Explicit monster probe остаётся отдельным install evidence path и
+не подтверждает random race/group parity.
+
+Проверка: 4 focused monster/object/player boundary tests — OK; native explicit
+monster probe — 1/1; one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: native random monster search/group probe prerequisites или
+завершение full object/gold allocation count contract.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

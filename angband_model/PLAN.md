@@ -794,6 +794,18 @@ one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: connect actual full-tail probe JSON to manifest, затем audit
 missing phase-level evidence и cleanup semantics.
 
+## Actual outer probe linked to phase manifest — 2026-10-18
+
+Python differential test теперь передаёт реальный `NATIVE_PARITY_FULL_TAIL` JSON в
+`build_generation_tail_manifest(outer_pipeline=...)`. Manifest публикует
+`outer_pipeline_status=observed`, но `observed_count=0` для phase-level evidence:
+outer completion не подменяет отдельные rubble/trap/player/monster/object/gold
+records. Completion/parity drift по-прежнему отвергается.
+
+Проверка: full-tail manifest differential — 1 OK; manifest/prerequisite tests — 2
+OK; one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: native phase-level evidence comparison/cleanup audit.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

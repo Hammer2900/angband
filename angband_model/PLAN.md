@@ -875,6 +875,20 @@ built; one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: remaining cleanup failure-path fixtures или native phase stream
 capture with explicit ordering evidence.
 
+## Native generation event ordering envelope — 2026-10-18
+
+`parity/full_tail.c` слушает существующие native
+`EVENT_GEN_LEVEL_START`/`EVENT_GEN_LEVEL_END` events и добавляет их в detached
+outer JSON. Differential test проверяет start/end presence и successful end, не
+создавая новые gameplay events. Это подтверждает outer lifecycle envelope, но не
+выводит порядок внутренних rubble/trap/player/monster/object/gold calls.
+
+Проверка: full-tail event differential — 1 OK; manifest/failure tests — 2 OK;
+one_room — won, 8/8 фаз; all native probe targets built; compile и git diff --check —
+OK.
+Следующий batch: remaining cleanup/error-path fixtures или source-backed internal
+phase telemetry, если доступна без изменения gameplay.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

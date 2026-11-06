@@ -727,6 +727,23 @@ git diff --check — OK.
 Следующий batch: full classic-tail allocation integration audit либо native
 player/monster/object combined fixture.
 
+## Full classic-tail integration prerequisites audit — 2026-10-18
+
+Добавлены `describe_classic_tail_integration_prerequisites` и validator. Контракт
+фиксирует required runtime globals/catalogs (`player`, `chunk`, `dun`, profile,
+z_info/f_info/r_info/k_info/trap_info, RNG, events), exact six-phase order,
+ownership domains и native failure-cleanup policy. Probe mode явно isolated; обычный
+`classic_gen` dispatch не объявляется безопасным без всех prerequisites.
+
+Aggregate evidence report уже публикуется как metadata-only; `generation_complete`
+остаётся false, execution disabled, parity pending. Full classic-tail probe отложен
+до единого штатного harness, чтобы не скрыть phase-specific failures.
+
+Проверка: prerequisites/aggregate tests — 2 OK; one_room — won, 8/8 фаз; compile и
+git diff --check — OK.
+Следующий batch: native combined six-phase harness prerequisites или отдельный
+full `classic_gen` probe с проверяемым cleanup/error path.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

@@ -1072,6 +1072,19 @@ runtime/build failure.
 Следующий batch: maintenance-only audit или новые native probes только при
 появлении source-backed evidence; parity не закрыта.
 
+## Native shared RNG stream boundary audit — 2026-10-18
+
+Source audit `z-rand.c` подтверждает native WELLRNG1024a и `state_i` как opaque
+state index `0..31`; это не draw counter. `classic_gen` вызывает множество native
+RNG consumers между six tail calls, но public telemetry не экспортирует phase
+boundaries или draw sequence. Добавлены `describe_native_rng_stream_boundary` и
+validator, запрещающие подменять cursor draw count и сохраняющие parity pending.
+
+Проверка: RNG boundary/final/progress tests — 3 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK.
+Следующий batch: maintenance-only audit или source-backed native stream hook;
+искусственная реконструкция RNG order запрещена.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

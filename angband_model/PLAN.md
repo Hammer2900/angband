@@ -1046,6 +1046,18 @@ telemetry валидны; phase-level missing evidence не замаскиров
 Следующий batch: maintenance-only audit или новые native probes только при
 появлении source-backed evidence; parity не закрыта.
 
+## Progress summary final-report integrity guard — 2026-10-18
+
+Добавлен focused progress test, который требует наличия final native parity report
+в aggregate summary и отвергает tampering `pending_parity_count`, `blocker_count`
+или `parity_status`. Guard не меняет counters и не расширяет native claims.
+
+Проверка: progress/final-report tests — 3 OK; one_room — won, 8/8 фаз; compile,
+py_compile и git diff --check — OK. Native parity остаётся pending.
+
+Следующий batch: maintenance-only audit или новые native probes только при
+появлении source-backed evidence; parity не закрыта.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

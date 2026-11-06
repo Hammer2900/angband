@@ -806,6 +806,19 @@ records. Completion/parity drift по-прежнему отвергается.
 OK; one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: native phase-level evidence comparison/cleanup audit.
 
+## Phase-level evidence and cleanup audit — 2026-10-18
+
+Combined manifest теперь сохраняет per-phase `cleanup_status` и общий
+`cleanup_verified=False`; outer pipeline evidence не подменяет phase evidence и не
+подтверждает cleanup. Validator отвергает cleanup/completion/parity drift.
+Phase-level probes остаются отдельными: rubble/trap/player/monster/object
+records имеют разные ownership boundaries и не объединяются в ложный full parity.
+
+Проверка: manifest/prerequisite/cleanup audit tests — 3 OK; full-tail differential
+— 1 OK; compile и git diff --check — OK.
+Следующий batch: native phase-level changed-cell/RNG comparison или remaining
+cleanup failure-path evidence.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

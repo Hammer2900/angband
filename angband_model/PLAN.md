@@ -862,6 +862,19 @@ status, всегда оставляя parity pending и execution disabled.
 Следующий batch: remaining cleanup failure-path evidence или полный native phase
 stream capture, если можно изолировать его без gameplay mutation.
 
+## Aggregate native probe manifest from actual binaries — 2026-10-18
+
+Python differential helper `_native_tail_probe_manifest` запускает существующие
+native probe binaries (rubble, player, monster, object) из `GAME_ROOT`, извлекает
+JSON prefixes и строит six-phase manifest. Observed phases не скрывают отсутствие
+random_traps; outer/full-tail evidence остаётся отдельным layer. Native RNG indices
+проверяются как opaque range, phase facts — через per-probe assertions.
+
+Проверка: manifest differential test — 1 OK; all required native probe targets
+built; one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: remaining cleanup failure-path fixtures или native phase stream
+capture with explicit ordering evidence.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

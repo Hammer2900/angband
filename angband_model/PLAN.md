@@ -933,6 +933,22 @@ pending.
 Следующий batch: remaining cleanup/error-path fixtures или native source-backed
 phase instrumentation boundary.
 
+## Outer generation telemetry validator — 2026-10-18
+
+Добавлен `validate_generation_outer_telemetry` для detached full-tail lifecycle
+JSON: boolean level start/end/success envelope, nonnegative room/tunnel counters и
+`room_end <= room_start`. Validator не выводит внутренний phase order, не меняет
+pending counters и сохраняет parity pending.
+
+Actual full-tail differential теперь использует validator; observed depth-1 path
+с `room_start/end/tunnel=0/0/0` принимается как valid telemetry absence, не как
+semantic room/tunnel result.
+
+Проверка: full-tail telemetry differential — 1 OK; telemetry/status/progress tests
+— 3 OK; compile и git diff --check — OK.
+Следующий batch: remaining cleanup/error-path fixtures или native source-backed
+phase instrumentation boundary.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

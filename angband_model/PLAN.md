@@ -889,6 +889,20 @@ OK.
 Следующий batch: remaining cleanup/error-path fixtures или source-backed internal
 phase telemetry, если доступна без изменения gameplay.
 
+## Phase failure/cleanup path verification — 2026-10-18
+
+Failure evidence contract проверен в manifest: failed phase с
+`cleanup_status=pending` остаётся observed, но не может объявлять generation
+complete, retry или rollback. Это документирует частичное native state без
+вызова cleanup и без inference фактического удаления/rollback.
+
+Проверка: failure/comparator/manifest tests — 2 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK. Native full-tail success path остаётся отдельным;
+real failure injection пока не добавляется, чтобы не менять gameplay/engine state.
+
+Следующий batch: aggregate native probe report с per-phase status или source-backed
+internal phase telemetry без изменения gameplay.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

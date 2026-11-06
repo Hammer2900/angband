@@ -63,8 +63,38 @@ static int test_explicit_monster_fixture(void *state)
 	ok;
 }
 
+static int test_random_distant_monster_fixture(void *state)
+{
+	struct chunk *c = t_build_arena(15, 15);
+	uint32_t saved_rng[RAND_DEG];
+	uint32_t saved_state_i = state_i, saved_rand_value = Rand_value;
+	bool saved_rand_quick = Rand_quick;
+	bool placed;
+	int i;
+	(void)state;
+
+	for (i = 0; i < RAND_DEG; ++i) saved_rng[i] = STATE[i];
+	c->depth = 1;
+	player->depth = 1;
+	player->grid = loc(7, 7);
+	Rand_quick = false;
+	Rand_state_init(7);
+	placed = pick_and_place_distant_monster(c, player->grid, 0, true, 1);
+	printf("NATIVE_PARITY_MONSTER_RANDOM {\"seed\":7,\"depth\":1,\"placed\":%s,\"monster_count\":%d,\"rng_state_i\":%u}\n",
+		placed ? "true" : "false", c->mon_cnt, state_i);
+	eq(placed, true);
+	eq(c->mon_cnt > 0, true);
+	cave_free(c);
+	for (i = 0; i < RAND_DEG; ++i) STATE[i] = saved_rng[i];
+	state_i = saved_state_i;
+	Rand_value = saved_rand_value;
+	Rand_quick = saved_rand_quick;
+	ok;
+}
+
 const char *suite_name = "parity/monster";
 struct test tests[] = {
 	{ "explicit-monster-fixture", test_explicit_monster_fixture },
+	{ "random-distant-monster-fixture", test_random_distant_monster_fixture },
 	{ NULL, NULL },
 };

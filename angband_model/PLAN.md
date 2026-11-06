@@ -655,6 +655,24 @@ monster probe — 1/1; one_room — won, 8/8 фаз; compile и git diff --check
 Следующий batch: native random monster search/group probe prerequisites или
 завершение full object/gold allocation count contract.
 
+## Native random monster search probe — 2026-10-18
+
+Расширен `parity/monster.c` штатным random fixture: `pick_and_place_distant_monster`
+на synthetic arena после `init_angband/player_make_simple`. Probe возвращает
+`placed=true`, `monster_count>0` и opaque RNG index; explicit race/install fixture
+остаётся отдельным. При текущем seed `monster_count` зависит data/RNG context, поэтому
+фиксируется только как положительный observed result.
+
+Python differential test проверяет seed/depth/placed/count>0/RNG range, без вывода
+race-selection или group draw semantics. Search/group contracts отделены и остаются
+parity pending; `classic_gen` не запускается.
+
+Проверка: `parity/monster` 2/2; random+explicit differential tests — 2 OK;
+boundary/search/group tests — 3 OK; one_room — won, 8/8 фаз; compile и
+git diff --check — OK.
+Следующий batch: native group expansion evidence или full object/gold
+`Rand_normal` allocation boundary.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

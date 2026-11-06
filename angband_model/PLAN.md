@@ -1032,6 +1032,20 @@ git diff --check — OK.
 Следующий batch: maintenance-only audit или новые native probes только при
 появлении source-backed evidence; parity не закрыта.
 
+## Final parity report consistency audit — 2026-10-18
+
+Повторно проверены immutable final report/ledger/blocker invariants без изменения
+claims: `pending_parity_count=6`, blockers=4, parity pending, execution disabled.
+Representative native probes прошли: full-tail 1/1, monster 3/3, object 2/2,
+native RNG 8/8, player 1/1, trap 1/1. Actual differential manifest и outer
+telemetry валидны; phase-level missing evidence не замаскирована.
+
+`one_room` прошёл 8/8; compile, py_compile и git diff --check — OK. Native parity
+остаётся pending.
+
+Следующий batch: maintenance-only audit или новые native probes только при
+появлении source-backed evidence; parity не закрыта.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

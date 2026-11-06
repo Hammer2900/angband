@@ -623,6 +623,23 @@ compile и git diff --check — OK.
 Следующий batch: native `alloc_objects` object/gold allocation probe или
 завершение monster random-search/group boundary.
 
+## Native object/gold allocation probe — 2026-10-18
+
+Расширен `parity/object.c`: второй fixture вызывает публичные
+`alloc_objects(SET_BOTH, TYP_OBJECT, 1, ...)` и `alloc_objects(SET_BOTH, TYP_GOLD, 1,
+...)` после штатного init. Probe считает все floor objects по native interior scan и
+разделяет object/gold counts; fixed-cell assumptions удалены. Получено object=1,
+gold=1, `parity/object` — 2/2.
+
+Python differential test проверяет counts, depth/seed и opaque RNG range; explicit
+install test обновлён под новый harness count. Это не закрывает `Rand_normal` count
+roll, full candidate parity или `classic_gen` integration.
+
+Проверка: native object target 2/2; two targeted differential tests — 2 OK;
+compile и git diff --check — OK.
+Следующий batch: full allocation count/candidate differential или monster random
+search/group boundary.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

@@ -996,6 +996,25 @@ one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: finalize native parity pending ledger и remaining source-backed
 blocker inventory.
 
+## Native parity blocker inventory — 2026-10-18
+
+Добавлены `describe_native_parity_blockers` и validator с четырьмя unresolved
+source-backed blockers:
+
+1. `phase_semantics` — six tail calls не имеют phase-level telemetry;
+2. `rng_order` — shared native RNG stream/draw order не captured;
+3. `catalog_ownership` — engine candidate scans/catalog ownership остаются native;
+4. `cleanup_verification` — cleanup call sequence есть структурно, rollback state
+   не verified.
+
+Каждый blocker содержит category/status/source ref/reason. Inventory подключён к
+progress summary и не позволяет объявить generation complete или parity complete.
+
+Проверка: blocker/ledger/progress tests — 3 OK; `pending_parity_count=6`;
+one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: финальный pending ledger/report audit без искусственного закрытия
+native blockers.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

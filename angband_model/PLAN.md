@@ -1058,6 +1058,20 @@ py_compile и git diff --check — OK. Native parity остаётся pending.
 Следующий batch: maintenance-only audit или новые native probes только при
 появлении source-backed evidence; parity не закрыта.
 
+## Release-readiness final consistency audit — 2026-10-18
+
+Tracked model/native files чисты относительно последнего logical state. Final
+report guards — 5 OK; native probes: full-tail 1/1, monster 3/3, object 2/2,
+native RNG 8/8, player 1/1, trap 1/1. Differential manifest/outer telemetry
+valid; `one_room` — won, 8/8 фаз; compile/py_compile/git diff --check — OK.
+
+Инварианты не изменены: pending parity=6, blockers=4, execution disabled,
+`generation_complete=False`. Pyright unavailable — diagnostics не являются
+runtime/build failure.
+
+Следующий batch: maintenance-only audit или новые native probes только при
+появлении source-backed evidence; parity не закрыта.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

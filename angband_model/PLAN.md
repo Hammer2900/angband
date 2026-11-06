@@ -903,6 +903,36 @@ real failure injection пока не добавляется, чтобы не м�
 Следующий batch: aggregate native probe report с per-phase status или source-backed
 internal phase telemetry без изменения gameplay.
 
+## Aggregate native probe status report — 2026-10-18
+
+Добавлены `build_generation_tail_status_report` и validator. Они публикуют
+per-phase `observed/invalid/not_observed` и derived failed count, отдельно от
+outer pipeline status. Report strict-JSON, side-effect-free, parity pending и
+содержит `pending_counters_unchanged=True`; progress summary публикует его как
+`native_generation_tail_status` и проверяет counter immutability.
+
+Проверка: status/manifest/progress tests — 3 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK.
+Следующий batch: remaining cleanup/error-path fixtures или source-backed internal
+phase telemetry без изменения gameplay.
+
+## Native internal generation telemetry audit — 2026-10-18
+
+`parity/full_tail.c` расширен read-only listeners для существующих
+`EVENT_GEN_ROOM_START`, `EVENT_GEN_ROOM_END` и `EVENT_GEN_TUNNEL_FINISHED`. Detached
+outer JSON публикует room start/end counts, tunnel event count и aggregate steps;
+обычный depth-1 outer path наблюдал `0/0/0`, что фиксируется как отсутствие event
+telemetry, а не как доказательство отсутствия rooms/tunnels.
+
+Differential test проверяет только nonnegative accounting и
+`room_end_count <= room_start_count`; внутренний six-phase order/parity остаётся
+pending.
+
+Проверка: full-tail telemetry differential — 1 OK; status/manifest/progress tests —
+3 OK; one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: remaining cleanup/error-path fixtures или native source-backed
+phase instrumentation boundary.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

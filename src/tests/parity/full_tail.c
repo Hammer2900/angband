@@ -15,6 +15,10 @@
 static int generation_start_seen;
 static int generation_end_seen;
 static bool generation_end_success;
+static int room_start_count;
+static int room_end_count;
+static int tunnel_finished_count;
+static int tunnel_steps;
 
 static void generation_event(game_event_type type, game_event_data *data, void *user)
 {
@@ -23,6 +27,12 @@ static void generation_event(game_event_type type, game_event_data *data, void *
 	if (type == EVENT_GEN_LEVEL_END) {
 		generation_end_seen = 1;
 		generation_end_success = data->flag;
+	}
+	if (type == EVENT_GEN_ROOM_START) ++room_start_count;
+	if (type == EVENT_GEN_ROOM_END) ++room_end_count;
+	if (type == EVENT_GEN_TUNNEL_FINISHED) {
+		++tunnel_finished_count;
+		tunnel_steps += data->tunnel.nstep;
 	}
 }
 
@@ -62,15 +72,18 @@ static int test_full_tail_outer_pipeline(void *state)
 	Rand_quick = false;
 	generation_start_seen = generation_end_seen = 0;
 	generation_end_success = false;
+	room_start_count = room_end_count = 0;
+	tunnel_finished_count = tunnel_steps = 0;
 	Rand_state_init(7);
 	prepare_next_level(player);
 	on_new_level();
 	if (!cave) return 1;
-	printf("NATIVE_PARITY_FULL_TAIL {\"seed\":7,\"depth\":%d,\"player_x\":%d,\"player_y\":%d,\"monsters\":%d,\"objects\":%d,\"rng_state_i\":%u,\"generation_start_seen\":%s,\"generation_end_seen\":%s,\"generation_end_success\":%s}\n",
+	printf("NATIVE_PARITY_FULL_TAIL {\"seed\":7,\"depth\":%d,\"player_x\":%d,\"player_y\":%d,\"monsters\":%d,\"objects\":%d,\"rng_state_i\":%u,\"generation_start_seen\":%s,\"generation_end_seen\":%s,\"generation_end_success\":%s,\"room_start_count\":%d,\"room_end_count\":%d,\"tunnel_finished_count\":%d,\"tunnel_steps\":%d}\n",
 		cave->depth, player->grid.x, player->grid.y, cave->mon_cnt,
 		cave->obj_max, state_i, generation_start_seen ? "true" : "false",
 		generation_end_seen ? "true" : "false",
-		generation_end_success ? "true" : "false");
+		generation_end_success ? "true" : "false", room_start_count,
+		room_end_count, tunnel_finished_count, tunnel_steps);
 	eq(cave->depth, player->depth);
 	eq(player->grid.x >= 0, true);
 	eq(player->grid.y >= 0, true);

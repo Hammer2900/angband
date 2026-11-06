@@ -710,6 +710,23 @@ integration остаются pending.
 Следующий batch: monster group completion review или native full classic-tail
 allocation integration audit.
 
+## Unified native-tail evidence aggregate — 2026-10-18
+
+Добавлены `build_generation_tail_evidence_report` и
+`validate_generation_tail_evidence_report`. Aggregate фиксирует ровно шесть фаз в
+classic order, observed/not_observed per phase, `parity_status=pending`,
+`generation_complete=False` и execution disabled. Explicit probe evidence теперь
+может быть сведено в одну metadata-only проекцию без certification full tail.
+
+Progress summary публикует aggregate как `native_generation_tail_evidence` и
+validator запрещает completion drift. Existing bridge counters и one-room behavior
+не изменились.
+
+Проверка: aggregate/progress tests — 2 OK; one_room — won, 8/8 фаз; compile и
+git diff --check — OK.
+Следующий batch: full classic-tail allocation integration audit либо native
+player/monster/object combined fixture.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

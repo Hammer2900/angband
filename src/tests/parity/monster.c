@@ -92,9 +92,51 @@ static int test_random_distant_monster_fixture(void *state)
 	ok;
 }
 
+static int test_explicit_group_fixture(void *state)
+{
+	struct chunk *c = t_build_arena(21, 21);
+	struct monster_race *race = NULL;
+	struct monster_group_info info = { 0, 0 };
+	uint32_t saved_rng[RAND_DEG];
+	uint32_t saved_state_i = state_i, saved_rand_value = Rand_value;
+	bool saved_rand_quick = Rand_quick;
+	int before, i;
+	bool placed;
+	(void)state;
+
+	for (i = 0; i < RAND_DEG; ++i) saved_rng[i] = STATE[i];
+	for (i = 1; i < z_info->r_max - 1; ++i) {
+		if (r_info[i].name && (r_info[i].friends || r_info[i].friends_base)
+				&& !rf_has(r_info[i].flags, RF_UNIQUE)) {
+			race = &r_info[i];
+			break;
+		}
+	}
+	if (!race) {
+		cave_free(c);
+		return 1;
+	}
+	Rand_quick = false;
+	Rand_state_init(7);
+	before = c->mon_cnt;
+	placed = place_new_monster(c, loc(10, 10), race, true, true, info,
+		ORIGIN_DROP);
+	printf("NATIVE_PARITY_MONSTER_GROUP {\"seed\":7,\"placed\":%s,\"race_id\":%u,\"monster_count\":%d,\"group_expansion\":true,\"rng_state_i\":%u}\n",
+		placed ? "true" : "false", race->ridx, c->mon_cnt - before, state_i);
+	eq(placed, true);
+	eq(c->mon_cnt > before, true);
+	cave_free(c);
+	for (i = 0; i < RAND_DEG; ++i) STATE[i] = saved_rng[i];
+	state_i = saved_state_i;
+	Rand_value = saved_rand_value;
+	Rand_quick = saved_rand_quick;
+	ok;
+}
+
 const char *suite_name = "parity/monster";
 struct test tests[] = {
 	{ "explicit-monster-fixture", test_explicit_monster_fixture },
 	{ "random-distant-monster-fixture", test_random_distant_monster_fixture },
+	{ "explicit-group-fixture", test_explicit_group_fixture },
 	{ NULL, NULL },
 };

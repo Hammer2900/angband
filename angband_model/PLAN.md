@@ -674,6 +674,23 @@ git diff --check — OK.
 Следующий batch: native group expansion evidence или full object/gold
 `Rand_normal` allocation boundary.
 
+## Native monster group expansion probe — 2026-10-18
+
+Расширен `parity/monster.c` третьим штатным fixture: выбирается первая
+non-unique race с `friends`/`friends_base` из реального catalog и вызывается
+`place_new_monster(..., group_ok=true)`. Probe сообщает `placed=true`, positive
+monster_count, race_id и `group_expansion=true`; конкретный count/RNG не
+фиксируется из-за data-dependent friends/escort rolls.
+
+Добавлен `validate_monster_group_result`; differential test проверяет observed
+placement/group evidence и opaque RNG range. Explicit install, random search и
+group expansion остаются отдельными evidence paths; full `classic_gen` parity
+не объявляется.
+
+Проверка: `parity/monster` 3/3; group/random/explicit differential tests — 3 OK;
+search/group/result tests — OK; compile и git diff --check — OK.
+Следующий batch: full object/gold `Rand_normal` allocation boundary.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

@@ -66,6 +66,7 @@ static int test_allocated_object_gold_fixture(void *state)
 	struct object *object;
 	struct object *gold;
 	int object_count = 0, gold_count = 0;
+	int room_requested, both_object_requested, both_gold_requested;
 	uint32_t saved_rng[RAND_DEG];
 	uint32_t saved_state_i = state_i, saved_rand_value = Rand_value;
 	bool saved_rand_quick = Rand_quick;
@@ -74,10 +75,19 @@ static int test_allocated_object_gold_fixture(void *state)
 
 	for (i = 0; i < RAND_DEG; ++i) saved_rng[i] = STATE[i];
 	c->depth = 1;
+	for (int y = 1; y < c->height - 1; ++y) {
+		for (int x = 1; x < c->width - 1; ++x) {
+			sqinfo_on(square(c, loc(x, y))->info, SQUARE_ROOM);
+		}
+	}
 	Rand_quick = false;
 	Rand_state_init(7);
-	eq(alloc_objects(c, SET_BOTH, TYP_OBJECT, 1, 1, ORIGIN_FLOOR), 0);
-	eq(alloc_objects(c, SET_BOTH, TYP_GOLD, 1, 1, ORIGIN_FLOOR), 0);
+	room_requested = Rand_normal(z_info->room_item_av, 3);
+	both_object_requested = Rand_normal(z_info->both_item_av, 3);
+	both_gold_requested = Rand_normal(z_info->both_gold_av, 3);
+	eq(alloc_objects(c, SET_ROOM, TYP_OBJECT, room_requested, 1, ORIGIN_FLOOR), 0);
+	eq(alloc_objects(c, SET_BOTH, TYP_OBJECT, both_object_requested, 1, ORIGIN_FLOOR), 0);
+	eq(alloc_objects(c, SET_BOTH, TYP_GOLD, both_gold_requested, 1, ORIGIN_FLOOR), 0);
 	for (int y = 1; y < c->height - 1; ++y) {
 		for (int x = 1; x < c->width - 1; ++x) {
 			struct object *current = square_object(c, loc(x, y));
@@ -89,7 +99,8 @@ static int test_allocated_object_gold_fixture(void *state)
 	}
 	object = square_object(c, loc(1, 1));
 	gold = square_object(c, loc(2, 1));
-	printf("NATIVE_PARITY_OBJECT_ALLOC {\"seed\":7,\"depth\":1,\"object_count\":%d,\"gold_count\":%d,\"object_on_first_cell\":%s,\"gold_on_second_cell\":%s,\"rng_state_i\":%u}\n",
+	printf("NATIVE_PARITY_OBJECT_ALLOC {\"seed\":7,\"depth\":1,\"room_requested\":%d,\"both_object_requested\":%d,\"both_gold_requested\":%d,\"object_count\":%d,\"gold_count\":%d,\"object_on_first_cell\":%s,\"gold_on_second_cell\":%s,\"rng_state_i\":%u}\n",
+		room_requested, both_object_requested, both_gold_requested,
 		object_count, gold_count, object ? "true" : "false",
 		gold ? "true" : "false", state_i);
 	cave_free(c);

@@ -691,6 +691,25 @@ group expansion остаются отдельными evidence paths; full `clas
 search/group/result tests — OK; compile и git diff --check — OK.
 Следующий batch: full object/gold `Rand_normal` allocation boundary.
 
+## Full object/gold Rand_normal allocation probe — 2026-10-18
+
+`parity/object.c` allocation fixture теперь воспроизводит native count order:
+`Rand_normal(room_item_av, 3)`, `Rand_normal(both_item_av, 3)`,
+`Rand_normal(both_gold_av, 3)`, затем room/both object и both gold allocations.
+Synthetic interior помечен `SQUARE_ROOM` для SET_ROOM; probe считает все floor
+objects и разделяет object/gold counts.
+
+Python differential test фиксирует source-backed accounting relations:
+`object_count = room_requested + both_object_requested`,
+`gold_count = both_gold_requested`; конкретные случайные counts/RNG cursor не
+зашиваются, только opaque range. Full candidate/item semantics и classic_gen
+integration остаются pending.
+
+Проверка: native object target 2/2; allocation/explicit differential tests —
+2 OK; compile и git diff --check — OK.
+Следующий batch: monster group completion review или native full classic-tail
+allocation integration audit.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

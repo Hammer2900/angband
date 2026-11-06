@@ -1015,6 +1015,23 @@ one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: финальный pending ledger/report audit без искусственного закрытия
 native blockers.
 
+## Final native parity pending report — 2026-10-18
+
+Добавлены `build_native_generation_parity_report` и validator. Итоговый immutable
+report объединяет six-phase parity ledger, four source-backed blockers и cleanup
+boundary. Инварианты: `pending_parity_count=6`, `blocker_count=4`,
+`parity_status=pending`, `generation_complete=False`, execution disabled и
+pending counters unchanged. Under-reporting, completion drift и parity-complete
+claims отвергаются.
+
+Progress summary публикует final report отдельной diagnostic-only секцией.
+
+Проверка: final report/blocker/ledger/progress tests — 4 OK;
+`pending_parity_count=6`, blockers=4; one_room — won, 8/8 фаз; compile и
+git diff --check — OK.
+Следующий batch: maintenance-only audit или новые native probes только при
+появлении source-backed evidence; parity не закрыта.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

@@ -744,6 +744,40 @@ git diff --check — OK.
 Следующий batch: native combined six-phase harness prerequisites или отдельный
 full `classic_gen` probe с проверяемым cleanup/error path.
 
+## Combined six-phase evidence manifest — 2026-10-18
+
+Добавлены `build_generation_tail_manifest` и
+`validate_generation_tail_manifest`. Manifest сводит шесть phases с exact classic
+order, adapter/source refs, `observed/not_observed/invalid` evidence status и
+per-phase pending/execution flags. Nested evidence detached через strict JSON;
+manifest запрещает parity/generation completion drift.
+
+Это metadata-only combined report, не запуск `classic_gen`: failure cleanup,
+shared RNG ordering и actual cross-phase ownership всё ещё требуют единого native
+harness.
+
+Проверка: manifest/prerequisite/aggregate tests — 3 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK.
+Следующий batch: native combined six-phase harness prerequisites или отдельный
+full `classic_gen` probe с проверяемым cleanup/error path.
+
+## Native combined full-tail outer pipeline probe — 2026-10-18
+
+Добавлен `parity/full_tail.c` со штатным
+`set_file_paths/init_angband/player_make_simple/prepare_next_level/on_new_level`
+harness. Probe задаёт depth=1 и проходит реальный outer generation pipeline,
+возвращая detached depth/player position/monster count/object capacity/RNG index.
+Получено completed depth=1 с player/monster/object state; cleanup проходит.
+
+Это strongest combined evidence без прямого `classic_gen` вызова: shared RNG и
+phase ordering наблюдаются через штатный outer path, но full phase-by-phase parity,
+changed-cell records и native ownership certification ещё не объявлены.
+
+Проверка: `unittest-parity-full_tail` 1/1; targeted full-tail differential test —
+1 OK; one_room — won, 8/8 фаз; compile и git diff --check — OK.
+Следующий batch: добавить full-tail differential manifest linkage или зафиксировать
+remaining missing phase-level evidence.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

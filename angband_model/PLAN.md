@@ -606,6 +606,23 @@ one_room — won, 8/8 фаз; compile и git diff --check — OK.
 Следующий batch: native monster init/probe prerequisites или C object/gold probe
 audit с полным штатным data initialization.
 
+## Native object/gold install probe — 2026-10-18
+
+Добавлен `parity/object.c` со штатным init harness и synthetic arena. Probe явно
+вызывает `place_object` и `place_gold` на соседних клетках, возвращает object/gold
+IDs, positions, placement flags и opaque RNG index; allocation count/candidate scan
+и full `classic_gen` остаются отдельным pending boundary.
+
+Python differential test сверяет object_id=1, gold_id=2 и позиции `(2,2)/(3,2)`;
+RNG проверяется только как opaque range. Object/gold evidence contracts уже
+подключены к readiness/progress и не включают execution.
+
+Проверка: `unittest-parity-object` 1/1; targeted differential object test — 1 OK;
+object/monster/player boundary/progress tests — 4 OK; one_room — won, 8/8 фаз;
+compile и git diff --check — OK.
+Следующий batch: native `alloc_objects` object/gold allocation probe или
+завершение monster random-search/group boundary.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

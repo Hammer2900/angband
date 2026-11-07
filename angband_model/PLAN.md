@@ -1128,6 +1128,20 @@ Native parity claims не расширены.
 Следующий batch: maintenance-only audit или source-backed native stream hook;
 искусственная реконструкция RNG order запрещена.
 
+## Native outer failure cleanup/retry semantics — 2026-10-18
+
+Source audit `generate.c:cave_generate` добавил подтверждённые outer failure
+semantics к cleanup boundary: builder failure вызывает `cleanup_dun_data`,
+`EVENT_GEN_LEVEL_END=false` и retry; post-build overflow вызывает
+`uncreate_artifacts`, `cave_clear`, `cleanup_dun_data`, false end event и retry.
+Retry loop limit равен 100. Это структурное C evidence, не доказательство
+rollback state или успешной failure injection.
+
+Проверка: cleanup/final/progress tests — 3 OK; one_room — won, 8/8 фаз;
+py_compile и git diff --check — OK.
+Следующий batch: maintenance-only audit или source-backed native stream hook;
+искусственная реконструкция RNG order запрещена.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

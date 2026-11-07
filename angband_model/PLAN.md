@@ -1085,6 +1085,22 @@ compile и git diff --check — OK.
 Следующий batch: maintenance-only audit или source-backed native stream hook;
 искусственная реконструкция RNG order запрещена.
 
+## Native catalog/candidate ownership boundary — 2026-10-18
+
+Source audit подтверждает engine-owned catalogs и scans: objects через `k_info` и
+`alloc_objects` (`src/gen-cave.c:1321`), monsters через `r_info`/`lookup_monster`
+(`src/mon-util.c:119`), traps через `trap_info`/`lookup_trap` (`src/trap.c:41`).
+Добавлены `describe_native_catalog_ownership_boundary` и validator; Python catalog
+substitution запрещена, parity остаётся pending.
+
+Boundary включён в final native parity report как отдельная ownership evidence,
+без выбора candidates и без execution.
+
+Проверка: catalog/final/RNG/progress tests — 4 OK; py_compile и git diff --check —
+OK.
+Следующий batch: maintenance-only audit или source-backed native stream hook;
+искусственная реконструкция RNG order запрещена.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

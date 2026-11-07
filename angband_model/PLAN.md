@@ -1114,6 +1114,20 @@ py_compile и git diff --check — OK.
 Следующий batch: maintenance-only audit или source-backed native stream hook;
 искусственная реконструкция RNG order запрещена.
 
+## Normalized full native differential matrix — 2026-10-18
+
+`test_differential.py` теперь автоматически находит `build-headless` probes и
+поддерживает env overrides. Исправлен object/gold accounting assertion: native
+`Rand_normal` signed result может быть `-1`, а `alloc_objects` не выполняет
+отрицательное количество; differential сравнивает effective `max(requested, 0)`.
+
+Проверка: normalized native matrix — **10/10 OK**, без skips; catalog/final/RNG/
+progress tests — OK; one_room — won, 8/8 фаз; py_compile и git diff --check — OK.
+Native parity claims не расширены.
+
+Следующий batch: maintenance-only audit или source-backed native stream hook;
+искусственная реконструкция RNG order запрещена.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit

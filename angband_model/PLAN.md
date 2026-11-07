@@ -1101,6 +1101,19 @@ OK.
 Следующий batch: maintenance-only audit или source-backed native stream hook;
 искусственная реконструкция RNG order запрещена.
 
+## Native differential probe path normalization — 2026-10-18
+
+`test_differential.py` получил `native_parity_probe()` с env override и fallback
+`build-headless/unittests/parity` → legacy `build/unittests/parity`. Это устраняет
+ложные skips при штатной headless CMake сборке для object/monster/player/trap/
+native/full-tail probes; native semantics и parity claims не изменяются.
+
+Проверка: native differential manifest/object/monster/full-tail tests — 4/4 OK без
+env overrides; catalog/final/RNG/progress tests — 3 OK; one_room — won, 8/8 фаз;
+py_compile и git diff --check — OK.
+Следующий batch: maintenance-only audit или source-backed native stream hook;
+искусственная реконструкция RNG order запрещена.
+
 ## Explicit native monster install probe — 2026-10-18
 
 Добавлен `parity/monster.c` со штатным init harness, synthetic arena и explicit
